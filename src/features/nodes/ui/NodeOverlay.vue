@@ -1,25 +1,31 @@
 <script setup lang="ts">
-import { beginEdit } from "../../drawing";
-
+import { beginEdit, endEdit } from "../../collab/model/session";
 import { doc } from "../../../shared/document";
-import { move } from "../model/move";
+import { previewAnchor, commitAnchor, type Handle } from "../model/move";
 import { coordinates } from "../lib/coordinates";
-import type { Node } from "../../../shared/types";
-function drag(e: PointerEvent, n: Node, kind: string) {
+import type { Node, Point } from "../../../shared/types";
+
+function drag(e: PointerEvent, shapeId: string, node: Node, kind: Handle) {
   e.stopPropagation();
-  beginEdit();
   const svg = (e.target as SVGElement).ownerSVGElement!;
+  if (!doc.shapes.some((s) => s.id === shapeId)) return;
+  beginEdit();
+  const origin = { ...(kind === "anchor" ? node : node[kind]) };
+  let dx = 0;
+  let dy = 0;
   const f = (ev: PointerEvent) => {
-    const p = coordinates(ev, svg);
-    if (kind === "anchor") move(n, p);
-    else Object.assign(kind === "in" ? n.in : n.out, p);
+    const p: Point = coordinates(ev, svg);
+    dx = p.x - origin.x;
+    dy = p.y - origin.y;
+    previewAnchor(shapeId, node.id, kind, dx, dy);
+  };
+  const up = () => {
+    window.removeEventListener("pointermove", f);
+    commitAnchor(shapeId, node.id, kind, dx, dy);
+    endEdit();
   };
   window.addEventListener("pointermove", f);
-  window.addEventListener(
-    "pointerup",
-    () => window.removeEventListener("pointermove", f),
-    { once: true },
-  );
+  window.addEventListener("pointerup", up, { once: true });
 }
 </script>
 <template>
@@ -35,7 +41,7 @@ function drag(e: PointerEvent, n: Node, kind: string) {
         r="4"
         fill="white"
         stroke="#8052df"
-        @pointerdown="drag($event, n, k)" /><rect
+        @pointerdown="drag($event, s.id, n, k)" /><rect
         :x="n.x - 4"
         :y="n.y - 4"
         width="8"
@@ -43,6 +49,6 @@ function drag(e: PointerEvent, n: Node, kind: string) {
         fill="white"
         stroke="#8052df"
         data-testid="anchor"
-        @pointerdown="drag($event, n, 'anchor')" /></g
+        @pointerdown="drag($event, s.id, n, 'anchor')" /></g
   ></g>
 </template>

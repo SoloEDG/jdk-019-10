@@ -1,3 +1,3 @@
 export { default as Layers } from "./ui/Layers.vue";
-export { translateSelected } from "./model/drag";
-export { remove } from "./model/actions";
+export { previewTranslate, commitTranslate } from "./model/drag";
+export { remove, group, reorder } from "./model/actions";

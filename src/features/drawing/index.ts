@@ -1,5 +1,4 @@
 export { default as Tools } from "./ui/Tools.vue";
 export { path } from "./lib/path";
-export { create, add } from "./model/create";
-export { seed } from "./model/seed";
-export { beginEdit, undo, redo, revision } from "./model/history";
+export { create, anchor } from "./model/create";
+export { beginEdit, endEdit, undo, redo } from "../collab/model/session";

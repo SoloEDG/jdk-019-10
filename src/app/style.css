@@ -270,3 +270,66 @@ aside p {
     width: 210px;
   }
 }
+.presence {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.presence .avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: white;
+  font-size: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 0 0 1px #e6dfec;
+  letter-spacing: 0.5px;
+}
+.presence .avatar.me {
+  font-size: 10px;
+}
+.presence .sync {
+  font-size: 9px;
+  color: #b0a3bc;
+  margin: 0 10px;
+}
+.presence .sync.ok {
+  color: #7a9b6a;
+}
+footer .live {
+  color: #7a9b6a;
+}
+.notices {
+  position: fixed;
+  right: 250px;
+  bottom: 46px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 20;
+  pointer-events: none;
+}
+.notices p {
+  margin: 0;
+  max-width: 340px;
+  padding: 10px 13px;
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1.5;
+  background: #f3edfb;
+  color: #6f5c94;
+  box-shadow: 0 6px 22px #4b33631f;
+}
+.notices p.warn {
+  background: #fdf1e2;
+  color: #8a5a25;
+}
+@media (max-width: 1250px) {
+  .notices {
+    right: 225px;
+  }
+}

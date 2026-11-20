@@ -3,6 +3,8 @@ export interface Point {
   y: number;
 }
 export interface Node extends Point {
+  /** Stable identity used to merge edits made in different windows. */
+  id: string;
   in: Point;
   out: Point;
 }

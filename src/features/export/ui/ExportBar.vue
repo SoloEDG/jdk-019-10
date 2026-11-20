@@ -1,9 +1,18 @@
 <script setup lang="ts">
-import { doc } from "../../../shared/document";
+import { computed } from "vue";
 import { serialize } from "../lib/serialize";
 import { download } from "../model/download";
-import { save, restore } from "../model/storage";
-defineProps<{ paths: string[] }>();
+import { restore } from "../model/storage";
+import {
+  committedRevision,
+  save,
+  syncHealthy,
+} from "../../collab/model/session";
+const label = computed(
+  () =>
+    `Export SVG ↗  ·  v${committedRevision.value}` +
+    (syncHealthy.value ? "" : "（同步中）"),
+);
 </script>
 <template>
   <div class="export">
@@ -12,9 +21,14 @@ defineProps<{ paths: string[] }>();
     ><button
       class="primary"
       data-testid="export"
-      @click="download(serialize(doc.shapes, paths))"
+      :title="
+        syncHealthy
+          ? '导出已提交的版本'
+          : '有改动仍在同步，导出将包含最近一次已提交的版本'
+      "
+      @click="download(serialize())"
     >
-      Export SVG ↗
+      {{ label }}
     </button>
   </div>
 </template>

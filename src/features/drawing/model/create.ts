@@ -1,7 +1,10 @@
-import { doc } from "../../../shared/document";
-import type { Point, Shape } from "../../../shared/types";
-export function create(p: Point) {
-  const s: Shape = {
+import type { NodeLite } from "../../collab/model/crdt";
+import type { Point } from "../../../shared/types";
+import { createShape, type ShapeDraft } from "../../collab/model/session";
+
+/** Start a pen path; its first anchor is added by the caller. */
+export function create(): ShapeDraft {
+  const draft: ShapeDraft = {
     id: crypto.randomUUID(),
     name: "Pen path",
     nodes: [],
@@ -11,10 +14,17 @@ export function create(p: Point) {
     width: 3,
     opacity: 1,
   };
-  doc.shapes.push(s);
-  doc.selected = [s.id];
-  return s;
+  createShape(draft);
+  return draft;
 }
-export function add(s: Shape, p: Point) {
-  s.nodes.push({ ...p, in: { ...p }, out: { ...p } });
+
+/** Build an anchor; ids make each point addressable across windows. */
+export function anchor(p: Point): NodeLite {
+  return {
+    id: crypto.randomUUID(),
+    x: p.x,
+    y: p.y,
+    in: { x: p.x, y: p.y },
+    out: { x: p.x, y: p.y },
+  };
 }

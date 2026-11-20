@@ -1,5 +1,6 @@
 import type { Shape } from "../../../shared/types";
-export function path(s: Shape) {
+import type { MaterializedShape } from "../../collab/model/crdt";
+export function path(s: Shape | MaterializedShape) {
   if (!s.nodes.length) return "";
   let d = `M ${s.nodes[0].x} ${s.nodes[0].y}`;
   const n = s.nodes;
